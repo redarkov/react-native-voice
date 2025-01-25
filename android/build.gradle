@@ -1,5 +1,17 @@
 apply plugin: 'com.android.library'
 
+def isNewArchitectureEnabled() {
+    // To opt-in for the New Architecture, you can either:
+    // - Set `newArchEnabled` to true inside the `gradle.properties` file
+    // - Invoke gradle with `-newArchEnabled=true`
+    // - Set an environment variable `ORG_GRADLE_PROJECT_newArchEnabled=true`
+    return project.hasProperty("newArchEnabled") && project.newArchEnabled == "true"
+}
+
+if (isNewArchitectureEnabled()) {
+    apply plugin: "com.facebook.react"
+}
+
 repositories {
     mavenLocal()
     jcenter()
@@ -24,7 +36,7 @@ android {
     buildToolsVersion rootProject.hasProperty('buildToolsVersion') ? rootProject.buildToolsVersion : DEFAULT_BUILD_TOOLS_VERSION
 
     defaultConfig {
-        minSdkVersion 15
+        minSdkVersion 28
         targetSdkVersion rootProject.hasProperty('targetSdkVersion') ? rootProject.targetSdkVersion : DEFAULT_TARGET_SDK_VERSION
         versionCode 1
         versionName "1.0"
@@ -41,10 +53,10 @@ buildscript {
     if (project == rootProject) {
         repositories {
             jcenter()
+            google()
         }
         dependencies {
-            classpath 'com.android.tools.build:gradle:3.3.2'
-
+            classpath("com.android.tools.build:gradle:8.7.0")
             // NOTE: Do not place your application dependencies here; they belong
             // in the individual module build.gradle files
         }
